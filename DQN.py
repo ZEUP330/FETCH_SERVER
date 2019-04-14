@@ -152,6 +152,7 @@ class DQN(object):
 
     def save_model(self):
         model_number = self.get_file_number("eval_dqn")
+        print("model_number:",model_number)
         torch.save(self.eval_net, "model/eval_dqn/" + str(model_number) + ".pkl")
         torch.save(self.target_net, "model/target_dqn/" + str(model_number) + ".pkl")
 

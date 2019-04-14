@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 MAX_EPISODES = 10000
-MAX_EP_STEPS = 100
+MAX_EP_STEPS = 20
 MEMORY_CAPACITY = 30000
 
 
@@ -95,12 +95,12 @@ if __name__ == "__main__":
             action = rl.choose_action([endg, view_state])  # choose 时沿用之前的图像
             recent_end_goal = action[0]
             observation_, r, done = robot.test_step(action)  # 执行一步
-            rl.store_transition(observation, action, r, [observation_, view_state])  # 沿用之前的图像 RGBD
-            if rl.memory_counter > 5000 and st % 5 == 0:
+            rl.store_transition(observation, action, -r, [observation_, view_state])  # 沿用之前的图像 RGBD
+            if rl.memory_counter > 50:  # and st % 2 == 0:
                 rl.learn()
                 if st == 1:
                     print(".....................learn.....................")
-                    if i % 100 == 0:
+                    if i % 10 == 0:
                         rl.save_model()
             rw += r
             if done or st >= MAX_EP_STEPS:
