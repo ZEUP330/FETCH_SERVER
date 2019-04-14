@@ -42,11 +42,11 @@ class Robot(object):
         # print x, y
         dis = math.sqrt(math.pow(x - self.Box_position[0], 2)
                         + math.pow(y - self.Box_position[1], 2))
-        if dis < 0.08:  # 阈值，可调
+        if dis < 0.05:  # 阈值，可调
             done = True
             reward = 100
         else:
-            reward = dis - self.dis
+            reward = -dis
             reward *= 10
         self.dis = dis
         new_position = [x, y, 1.0]

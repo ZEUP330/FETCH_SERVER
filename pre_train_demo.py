@@ -96,7 +96,7 @@ if __name__ == "__main__":
             recent_end_goal = action[0]
             observation_, r, done = robot.test_step(action)  # 执行一步
             rl.store_transition(observation, action, -r, [observation_, view_state])  # 沿用之前的图像 RGBD
-            if rl.memory_counter > 50:  # and st % 2 == 0:
+            if rl.memory_counter > 10000:  # and st % 2 == 0:
                 rl.learn()
                 if st == 1:
                     print(".....................learn.....................")
