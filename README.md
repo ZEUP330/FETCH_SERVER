@@ -1,6 +1,6 @@
 # THE FETCH TRAINING IN SERVER 2*TITANX(24G) #
-![1position-dis](1position_-dis.png)
-![1positiondis-dis](1position_dis-dis.png)
+![1position-dis](Plot/1position_-dis.png)
+![1positiondis-dis](Plot/1position_dis-dis.png)
 Using Multi-GPU:
 
 Except put your data and model in GPU, you need to using follow coda:
