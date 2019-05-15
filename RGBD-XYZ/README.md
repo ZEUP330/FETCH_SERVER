@@ -2,9 +2,9 @@
 
 using U-net and ground-true(by color)
 
-![img](Screenshot from 2019-05-15 17:58:53.png)
+![img](roi.png)
 
-![de](Screenshot from 2019-05-15 17:59:15.png)
+![de](rgb.png)
 
 ### XY-D --- XYZ
 
