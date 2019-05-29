@@ -12,3 +12,9 @@ optimizer = nn.DataParallel(optimizer, device_ids=device_ids)
 optimizer.module.step()
 
 ```
+
+you can get xyz from img by:
+```shell
+python demo.py
+
+```
