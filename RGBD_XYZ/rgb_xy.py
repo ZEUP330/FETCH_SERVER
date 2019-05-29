@@ -40,7 +40,7 @@ def random_read_():
         index += 1
         index %= 9999
         rgb, dep = read_img_dep(pos[index][:-4])
-        print(pos[index][:-4])
+#         print(pos[index][:-4])
         plt.imshow(rgb)
         plt.show()
         xy = np.mean(np.argwhere(rgb[:, :, :] == 0), axis=0).astype(np.float32)
@@ -124,9 +124,9 @@ class MyDataset(Dataset):
 
 class rgb_xy():
     def __init__(self):
-        print("-------{Building Network}-------")
+#         print("-------{Building Network}-------")
         self.unet = UNet(n_channels=3, n_classes=2).cuda()  # print unet
-        print("-------{Build finish!}-------")
+#         print("-------{Build finish!}-------")
         self.optimizer = torch.optim.Adam(self.unet.parameters(), lr=LR)
         # self.optimizer = torch.optim.SGD(self.unet.parameters(), lr=LR)
         # self.loss_func = nn.L1Loss()
@@ -137,7 +137,7 @@ class rgb_xy():
         self.load_model(model_path="D:/GitDesktop/FETCH_SERVER/RGBD_XYZ/rgb2x.pkl")
 
     def train(self):
-        print("-------{Start Trian}-------")
+#         print("-------{Start Trian}-------")
         for epoch in range(EPOCH):
             for batch_idx, (rgb, ground_true) in enumerate(self.train_loader):
                 # print batch_idx

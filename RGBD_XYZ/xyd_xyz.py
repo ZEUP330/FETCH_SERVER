@@ -160,9 +160,9 @@ class CNN(nn.Module):
 class xyd_xyz():
 
     def __init__(self):
-        print("-------{Building Network}-------")
+#         print("-------{Building Network}-------")
         self.cnn = CNN().cuda()  # print(cnn)
-        print("-------{Build finish!}-------")
+#         print("-------{Build finish!}-------")
         self.optimizer = torch.optim.Adam(self.cnn.parameters(), lr=LR)
         # self.optimizer = torch.optim.SGD(self.cnn.parameters(), lr=LR)
         # self.loss_func = nn.L1Loss()
@@ -191,7 +191,7 @@ class xyd_xyz():
         return 1 - sum1
 
     def train(self):
-        print("-------{Start Trian}-------")
+#         print("-------{Start Trian}-------")
         for epoch in range(EPOCH):
             for batch_idx, (xyd, xyz) in enumerate(self.train_loader):
                 # print(batch_idx
