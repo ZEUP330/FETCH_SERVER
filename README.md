@@ -2,9 +2,25 @@
 ## we had used the DQN for fetch reach trail
 but the [performance](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DQN_SERVER) don't well
 ## Using DDPG for training fetch reach goal
-[here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER)
+you can find fetch and environment class in [here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER/GazeboEnv.py)
+
+DDPG algorithm in [here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER/SimpleDDPG.py)
+
+min function entrance in [here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER/ddpgmain.py)
+
 # RGB+D to xyz
 we have trained a [network](https://github.com/ZEUP330/FETCH_SERVER/tree/master/RGBD_XYZ) which can get xyz in simulate(gazebo) for img with deep.
+
+there have a [fetch_gazebo](https://github.com/ZEUP330/FETCH_SERVER/tree/master/fetch_gazebo) world (including obstacle model, fetch and the world)
+
+if you are ubuntu you can try 
+
+```shell
+sudo apt-get install ros-indigo-fetch_*
+```
+
+then you will install fetch package in /opt/ros/indigo/share/...(i copy the package from here);
+
 
 ##you can get xyz from img by:
 ```shell
