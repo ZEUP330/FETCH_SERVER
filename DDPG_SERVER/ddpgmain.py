@@ -1,32 +1,35 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
 import math
 import torch
-from fetch_moveit_config.SimpleDDPG import DDPG
-from fetch_moveit_config.FakeRobot import Robot
+from DDPG_SERVER.SimpleDDPG import DDPG
+from DDPG_SERVER.FakeRobot import Robot
 import time
 import copy
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-MAX_EPISODES = 2000
+MAX_EPISODES = 20000
 MAX_EP_STEPS = 200
-MEMORY_CAPACITY = 30000
+MEMORY_CAPACITY = 90000
 
 if __name__ == "__main__":
     robot = Robot()
     robot.random_box_position()
-    rl = DDPG()
     Box_position = robot.read_box_position()
+    # Box_position = [-0.04604054586892892, 0.08798244770703123, -0.11748548030476458]
+    rl = DDPG()
+    # rl.load_model()
     print(Box_position)
-    var = 1.0
+    var = 0.0
     total_rewards = []
     step_sums = []
-
     # 主循环
     for i in range(1, MAX_EPISODES):
         robot.random_box_position()
         Box_position = robot.read_box_position()
+        print("Box_Position:", Box_position)
         recent_end_goal = [0.715976, 0.029221, 1.0]
         robot.end_goal = recent_end_goal    # 末端坐标位置
         if i % 50 == 0:
@@ -53,12 +56,12 @@ if __name__ == "__main__":
             goal = np.array(Box_position).reshape(1, -1)
             x = np.concatenate((s, goal), axis=1)
             action = rl.choose_action(x)
+            if st < 5:
+                print("action: ", action)
             # ------------ -------------- ------------
-
             next_state, r, done, success = robot.test_step(action, var)
 
             # ----------- store transition -----------
-
             s_next = np.array(next_state).reshape(1, -1)
             x1 = np.concatenate((s_next, goal), axis=1)
             rl.store_transition(x, action, r, x1)
@@ -77,8 +80,10 @@ if __name__ == "__main__":
                 total_rewards.append(rw)
                 step_sums.append(st)
                 break
-        print("Box_position:{0}".format(robot.Box_position))
-        print("Recent_ender:{0}\n".format(state))
+        print("{0}\n".format(state))
+        if rl.memory_counter > MEMORY_CAPACITY and i % 50 == 0:
+            print("save model!")
+            rl.save_model()
     file_ob = open('table.txt', 'w')
     for i in total_rewards:
         file_ob.write(str(i))

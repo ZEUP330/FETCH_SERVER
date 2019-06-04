@@ -1,6 +1,18 @@
-# THE FETCH TRAINING IN SERVER 2*TITANX(24G) #
-![1position-dis](DDPG_SERVER/1position.png)
-Using Multi-GPU:
+# training fetch reach the certain goal in gazebo
+## we had used the DQN for fetch reach trail
+but the [performance](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DQN_SERVER) don't well
+## Using DDPG for training fetch reach goal
+[here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER)
+# RGB+D to xyz
+we have trained a [network](https://github.com/ZEUP330/FETCH_SERVER/tree/master/RGBD_XYZ) which can get xyz in simulate(gazebo) for img with deep.
+
+##you can get xyz from img by:
+```shell
+python demo.py
+
+```
+
+# Using Multi-GPU:
 
 Except put your data and model in GPU, you need to using follow coda:
 ```python

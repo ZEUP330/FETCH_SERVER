@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.5 (torch)" project-jdk-type="Python SDK" />
+=======
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6 (RDPG-Biped)" project-jdk-type="Python SDK" />
+>>>>>>> c0995967862622da76da7eb410de0a4670fa5922
 </project>
