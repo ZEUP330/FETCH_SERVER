@@ -6,7 +6,7 @@ you can find fetch and environment class in [here](https://github.com/ZEUP330/FE
 
 DDPG algorithm in [here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER/SimpleDDPG.py)
 
-min function entrance in [here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER/ddpgmain.py)
+main function entrance in [here](https://github.com/ZEUP330/FETCH_SERVER/tree/master/DDPG_SERVER/ddpgmain.py)
 
 # RGB+D to xyz
 we have trained a [network](https://github.com/ZEUP330/FETCH_SERVER/tree/master/RGBD_XYZ) which can get xyz in simulate(gazebo) for img with deep.
@@ -22,7 +22,7 @@ sudo apt-get install ros-indigo-fetch_*
 then you will install fetch package in /opt/ros/indigo/share/...(i copy the package from here);
 
 
-##you can get xyz from img by:
+## you can get xyz from img by:
 ```shell
 python demo.py
 
