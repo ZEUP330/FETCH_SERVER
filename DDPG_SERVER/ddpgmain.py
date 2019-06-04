@@ -3,8 +3,9 @@
 import os
 import math
 import torch
-from DDPG_SERVER.SimpleDDPG import DDPG
-from DDPG_SERVER.FakeRobot import Robot
+from SimpleDDPG import DDPG
+#from DDPG_SERVER.FakeRobot import Robot
+from GazeboEnv import Robot,GazeboEnv
 import time
 import copy
 import matplotlib.pyplot as plt
@@ -15,9 +16,13 @@ MAX_EP_STEPS = 200
 MEMORY_CAPACITY = 90000
 
 if __name__ == "__main__":
+
+    env = GazeboEnv()
     robot = Robot()
-    robot.random_box_position()
-    Box_position = robot.read_box_position()
+    #robot.random_box_position()
+    #Box_position = robot.read_box_position()
+    print('set')
+    Box_position = env.get_target_pose()
     # Box_position = [-0.04604054586892892, 0.08798244770703123, -0.11748548030476458]
     rl = DDPG()
     # rl.load_model()
@@ -27,23 +32,24 @@ if __name__ == "__main__":
     step_sums = []
     # 主循环
     for i in range(1, MAX_EPISODES):
-        robot.random_box_position()
-        Box_position = robot.read_box_position()
+        Box_position = env.get_target_pose()
         print("Box_Position:", Box_position)
-        recent_end_goal = [0.715976, 0.029221, 1.0]
-        robot.end_goal = recent_end_goal    # 末端坐标位置
+        env.reset_world()
+        recent_end_goal = env.get_wrist_end_pose()
+        #recent_end_goal = [0.715976, 0.029221, 1.0]
+        #robot.end_goal = recent_end_goal    # 末端坐标位置
         if i % 50 == 0:
             print("\n------------------Episode:{0}------------------".format(i))
         st = 0
         rw = 0
         # print "cube position:", Box_position
         # 存储夹爪距离木块的距离
-        now_dis = math.sqrt(math.pow(recent_end_goal[0] - Box_position[0], 2)
-                            + math.pow(recent_end_goal[1] - Box_position[1], 2)
-                            + math.pow(recent_end_goal[2] - Box_position[2], 2))
-        robot.dis = now_dis
+        #now_dis = math.sqrt(math.pow(recent_end_goal[0] - Box_position[0], 2)
+        #                    + math.pow(recent_end_goal[1] - Box_position[1], 2)
+        #                    + math.pow(recent_end_goal[2] - Box_position[2], 2))
+        #robot.dis = now_dis
         # 读取end_goal
-        state = robot.get_state()
+        state, _ = env.get_state()
         if i % 500 == 0:
             print("****************memory counter:{0}****************".format(rl.memory_counter))
         end = time.clock()
@@ -59,7 +65,7 @@ if __name__ == "__main__":
             if st < 5:
                 print("action: ", action)
             # ------------ -------------- ------------
-            next_state, r, done, success = robot.test_step(action, var)
+            next_state, r, done, success = env.test_step(action, var)
 
             # ----------- store transition -----------
             s_next = np.array(next_state).reshape(1, -1)
