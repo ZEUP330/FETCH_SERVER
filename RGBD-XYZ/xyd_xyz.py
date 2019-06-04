@@ -6,6 +6,8 @@ from torch.autograd import Variable
 import torch.utils.data as Data
 import torchvision.models as models
 import os
+import sys
+sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import cv2
 import matplotlib.pyplot as plt
 from collections import OrderedDict
@@ -28,7 +30,7 @@ def test_read():
         plt.show()
         x1 = float(position[i][1:-11].split(" ")[0][:-1])
         y1 = float(position[i][1:-11].split(" ")[1])
-        print x1, y1
+        print(x1, y1)
 
 
 def random_read_():
@@ -69,7 +71,7 @@ def read_data(file_dir="/home/ljt/Desktop/images/dep/", size=1):
     y1 = []
     z1 = []
     for root_name, not_use, files_name in os.walk(file_dir):
-        # print "load data from:{0},there are {1} picture".format(root_name, len(files_name))
+        # print("load data from:{0},there are {1} picture".format(root_name, len(files_name))
         for i in files_name:
             position.append(i)
             x1.append(float(i[1:-11].split(" ")[0][:-1]))
@@ -121,7 +123,7 @@ class MyDataset(Dataset):
 class MyLoss(nn.Module):
     def __init__(self):
         super(MyLoss, self).__init__()
-        print 'MyLoss'
+        print('MyLoss')
 
     def forward(self, pred, truth):
         var = []
@@ -157,15 +159,6 @@ class CNN(nn.Module):
         return xyz  #
 
 
-def test():
-    model = torch.load("xy2xyz.pkl")
-    t_xyd, t_xyz = random_read_()
-    t_out = model(t_xyd).data
-    print test_xyz
-    print test_out[0]
-    ac = float(cal_acc(t_xyz.cpu().data.numpy(), t_out[0].cpu().data.numpy()))
-    print "|test accuracy:%.4f" % ac
-
 
 def cal_acc(a, b):
     sum1 = 0
@@ -174,37 +167,51 @@ def cal_acc(a, b):
     return 1 - sum1
 
 
-if __name__ == "__main__":
-    print "-------{Building Network}-------"
-    cnn = CNN().cuda()  # print cnn
-    print "-------{Build finish!}-------"
-    optimizer = torch.optim.Adam(cnn.parameters(), lr=LR)
-    # optimizer = torch.optim.SGD(cnn.parameters(), lr=LR)
-    # loss_func = nn.L1Loss()
-    loss_func = MyLoss()
+class xyd_xyz():
+
+    def __init__(self):
+        print("-------{Building Network}-------")
+        self.cnn = CNN().cuda()  # print(cnn
+        print("-------{Build finish!}-------")
+        self.optimizer = torch.optim.Adam(self.cnn.parameters(), lr=LR)
+        # optimizer = torch.optim.SGD(cnn.parameters(), lr=LR)
+        # loss_func = nn.L1Loss()
+        self.loss_func = MyLoss()
+        self.data = MyDataset()
+        self.train_loader = torch.utils.data.DataLoader(dataset=self.data, batch_size=BATCH_SIZE, shuffle=True)
+
+    def train(self):
+        print("-------{Start Trian}-------")
+        for epoch in range(EPOCH):
+            for batch_idx, (xyd, xyz) in enumerate(self.train_loader):
+                # print(batch_idx
+                b_xyd = Variable(xyd).cuda()  # todo
+                b_xyz = Variable(xyz).cuda()
+                output = self.cnn(b_xyd).double()
+                loss = self.loss_func(output, b_xyz)
+                self.optimizer.zero_grad()
+                loss.backward()
+                self.optimizer.step()
+                if batch_idx % 5 == 0:
+                    test_xyd, test_xyz = random_read_()
+                    test_out = self.cnn(test_xyd).data
+                    print(test_xyz)
+                    print(test_out[0])
+                    accuracy = float(cal_acc(test_xyz.cpu().data.numpy(), test_out[0].cpu().data.numpy()))
+                    print("Epoch:", epoch, "|train loss: %.4f" % loss.cpu().data.numpy(), "|test accuracy:%.4f" % accuracy)
+                    print("\n")
+            torch.save(self.cnn, "xy2xyz.pkl")
+
+    def test(self):
+        model = torch.load("xy2xyz.pkl")
+        t_xyd, t_xyz = random_read_()
+        t_out = model(t_xyd).data
+        print(t_xyz)
+        print(t_out[0])
+        ac = float(cal_acc(t_xyz.cpu().data.numpy(), t_out[0].cpu().data.numpy()))
+        print("|test accuracy:%.4f" % ac)
 
 
-
-    data = MyDataset()
-    train_loader = torch.utils.data.DataLoader(dataset=data, batch_size=BATCH_SIZE, shuffle=True)
-
-    print "-------{Start Trian}-------"
-    for epoch in range(EPOCH):
-        for batch_idx, (xyd, xyz) in enumerate(train_loader):
-            # print batch_idx
-            b_xyd = Variable(xyd).cuda()  # todo
-            b_xyz = Variable(xyz).cuda()
-            output = cnn(b_xyd).double()
-            loss = loss_func(output, b_xyz)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            if batch_idx % 5 == 0:
-                test_xyd, test_xyz = random_read_()
-                test_out = cnn(test_xyd).data
-                print test_xyz
-                print test_out[0]
-                accuracy = float(cal_acc(test_xyz.cpu().data.numpy(), test_out[0].cpu().data.numpy()))
-                print "Epoch:", epoch, "|train loss: %.4f" % loss.cpu().data.numpy(), "|test accuracy:%.4f" % accuracy
-                print "\n"
-        torch.save(cnn, "xy2xyz.pkl")
+if __name__=="__main__":
+    method = xyd_xyz()
+    method.test()
